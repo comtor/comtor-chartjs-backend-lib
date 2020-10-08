@@ -107,6 +107,16 @@ public class ChartJsBuilder {
         return this;
     }
     
+    public ChartJsBuilder setLabel(String label) {
+        for (int i = 0; i < datasets.size(); i++) {
+            AbstractDataset dataset = (AbstractDataset) datasets.get(i);
+            if (dataset.getLabel() == null) {
+                dataset.setLabel(label);
+            }
+        }
+        return this;
+    }
+    
     public ChartJsBuilder setData(ArrayList data) {
         isValidData(data);
         setDataToChart(data);
