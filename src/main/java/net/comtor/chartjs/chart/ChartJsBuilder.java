@@ -181,12 +181,12 @@ public class ChartJsBuilder {
         return this;
     }
     
-    public ChartJsBuilder areLinearScale() {
+public ChartJsBuilder areLinearScale(String xLabel, String yLabel) {
         areCartesianAxes();
-        options.setScales(new ScaleBuilder(Scale.LINEAR_SCALE).build());
+        options.setScales(new ScaleBuilder(Scale.LINEAR_SCALE).setLabelString(xLabel,yLabel).build());
         return this;
     }
-    
+
     public ChartJsBuilder areLogarithmicScale() {
         areCartesianAxes();
         options.setScales(new ScaleBuilder(Scale.LOGARITHMIC_SCALE).build());

@@ -1,7 +1,6 @@
 package net.comtor.chartjs.Options.scales;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import java.util.ArrayList;
 import net.comtor.chartjs.Options.scales.Axes.XAxis;
 import net.comtor.chartjs.Options.scales.Axes.YAxis;
 import net.comtor.chartjs.Options.scales.Radial.RadialLinearScale;
@@ -22,7 +21,8 @@ public class ScaleBuilder {
 
     private Scale scale;
     private GridLines lines;
-    private ScaleLabel scaleLabel;
+    private ScaleLabel xScaleLabel;
+    private ScaleLabel yScaleLabel;
     private XAxis xAxe;
     private YAxis yAxe;
 
@@ -33,7 +33,8 @@ public class ScaleBuilder {
 
     public ScaleBuilder(String type) {
         lines = new GridLines();
-        scaleLabel = new ScaleLabel();
+        xScaleLabel = new ScaleLabel();
+        yScaleLabel = new ScaleLabel();
         switch (type) {
             case Scale.CATEGORY_SCALE:
                 scale = new CategoryScale();
@@ -80,7 +81,14 @@ public class ScaleBuilder {
     }
 
     public ScaleBuilder isDisplayScaleLabel() {
-        scaleLabel.setDisplay(true);
+        xScaleLabel.setDisplay(true);
+        yScaleLabel.setDisplay(true);
+        return this;
+    }
+    
+    public ScaleBuilder setLabelString(String xLabel,String yLabel){
+        xScaleLabel.setLabelString(xLabel);
+        yScaleLabel.setLabelString(yLabel);
         return this;
     }
 
@@ -179,6 +187,8 @@ public class ScaleBuilder {
     }
 
     private void setxAxisToScale() {
+        xAxe.setScaleLabel(xScaleLabel);
+        yAxe.setScaleLabel(yScaleLabel);
         if (scale instanceof LinearScale) {
             castToLinearScale().addlastXAxis(xAxe);
             castToLinearScale().addlastYAxis(yAxe);
