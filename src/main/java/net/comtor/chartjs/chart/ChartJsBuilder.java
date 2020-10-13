@@ -8,6 +8,7 @@ import net.comtor.chartjs.DataType2;
 import net.comtor.chartjs.Options.Legend.Legend;
 import net.comtor.chartjs.Options.Options;
 import net.comtor.chartjs.Options.Title;
+import net.comtor.chartjs.Options.scales.Cartesian.LinearScale;
 import net.comtor.chartjs.Options.scales.Scale;
 import net.comtor.chartjs.Options.scales.ScaleBuilder;
 import net.comtor.chartjs.chart.BarChart.BarChart;
@@ -107,16 +108,6 @@ public class ChartJsBuilder {
         return this;
     }
     
-    public ChartJsBuilder setLabel(String label) {
-        for (int i = 0; i < datasets.size(); i++) {
-            AbstractDataset dataset = (AbstractDataset) datasets.get(i);
-            if (dataset.getLabel() == null) {
-                dataset.setLabel(label);
-            }
-        }
-        return this;
-    }
-    
     public ChartJsBuilder setData(ArrayList data) {
         isValidData(data);
         setDataToChart(data);
@@ -173,6 +164,16 @@ public class ChartJsBuilder {
         }
         return this;
     }
+
+    public ChartJsBuilder setLabel(String label) {
+        for (int i = 0; i < datasets.size(); i++) {
+            AbstractDataset dataset = (AbstractDataset) datasets.get(i);
+            if (dataset.getLabel() == null) {
+                dataset.setLabel(label);
+            }
+        }
+        return this;
+    }
     
     //Scales
     public ChartJsBuilder areCategoryScale() {
@@ -187,6 +188,12 @@ public class ChartJsBuilder {
         return this;
     }
     
+    public ChartJsBuilder areLinearScale(String xLabel, String yLabel) {
+        areCartesianAxes();
+        options.setScales(new ScaleBuilder(Scale.LINEAR_SCALE).setLabelString(xLabel,yLabel).build());
+        return this;
+    }
+    
     public ChartJsBuilder areLogarithmicScale() {
         areCartesianAxes();
         options.setScales(new ScaleBuilder(Scale.LOGARITHMIC_SCALE).build());
@@ -198,7 +205,7 @@ public class ChartJsBuilder {
         options.setScales(new ScaleBuilder(Scale.TIME_SCALE).build());
         return this;
     }
-    
+
     //Axes
     public ChartJsBuilder areRadialAxes() {
         if (chart.getType().equals(ChartJs.TYPE_RADAR) || chart.getType().equals(ChartJs.TYPE_POLAR_AREA)) {
