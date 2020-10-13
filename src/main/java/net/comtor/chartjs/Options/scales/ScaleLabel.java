@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ScaleLabel {
 
-    private Boolean display;
+    private Boolean display=true;
     private String labelString;
     private Double lineHeight;
     private String fontColor;
