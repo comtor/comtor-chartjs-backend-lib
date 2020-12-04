@@ -20,14 +20,21 @@ public class ChartColor {
     }
 
     public ChartColor(ChartColor color) {
-        this((double) color.getRed() / 255, 
+        this((double) color.getRed() / 255,
                 (double) color.getGreen() / 225,
-                (double) color.getBlue() / 255, 
+                (double) color.getBlue() / 255,
                 color.getAlpha());
     }
 
     public ChartColor(double r, double g, double b) {
         this(r, g, b, 1.0f);
+    }
+
+    public ChartColor(String colorStrHex) {
+        this(
+                Integer.valueOf(colorStrHex.substring(0, 2), 16) / 255.0,
+                Integer.valueOf(colorStrHex.substring(2, 4), 16) / 255.0,
+                Integer.valueOf(colorStrHex.substring(4, 6), 16) / 255.0);
     }
 
     public int getRed() {
@@ -49,7 +56,6 @@ public class ChartColor {
     public double getAlpha() {
         return a;
     }
-    
 
     public String getRBGA() {
         return "rgba("
