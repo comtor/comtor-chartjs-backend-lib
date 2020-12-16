@@ -13,7 +13,7 @@ import net.comtor.chartjs.Options.scales.Scale;
  * @author vihlai
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class Options implements Serializable{
+public class Options implements Serializable {
 
     private static final long serialVersionUID = 3520808807976923216L;
     // Required parameters
@@ -34,6 +34,7 @@ public class Options implements Serializable{
     private Layout layout;
     private Object plugins;
     private String legendCallback;
+    private String centertext;
 
     public Options() {
     }
@@ -104,7 +105,7 @@ public class Options implements Serializable{
             this.legend = legend;
         }
 
-        public Builder setTitle(String title) {            
+        public Builder setTitle(String title) {
             this.title = new Title(title);
             return this;
         }
@@ -261,6 +262,14 @@ public class Options implements Serializable{
 
     public void setLegendCallback(String legendCallback) {
         this.legendCallback = legendCallback;
+    }
+
+    public String getCentertext() {
+        return centertext;
+    }
+
+    public void setCentertext(String centertext) {
+        this.centertext = centertext;
     }
 
 }

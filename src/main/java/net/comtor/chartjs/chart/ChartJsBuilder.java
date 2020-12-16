@@ -86,6 +86,11 @@ public class ChartJsBuilder {
         return this;
     }
     
+    public ChartJsBuilder addCenterText(String text) {        
+        options.setCentertext(text);
+        return this;
+    }
+    
     public ChartJsBuilder showLegend(boolean legend) {
         Legend legendOptions = new Legend(legend);
         options.setLegend(legendOptions);
