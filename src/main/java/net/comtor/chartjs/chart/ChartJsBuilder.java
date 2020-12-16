@@ -7,6 +7,9 @@ import net.comtor.chartjs.ChartJs;
 import net.comtor.chartjs.DataType2;
 import net.comtor.chartjs.Options.Legend.Legend;
 import net.comtor.chartjs.Options.Options;
+import net.comtor.chartjs.Options.Plugins.DoughnutLabel.DoughnutLabel;
+import net.comtor.chartjs.Options.Plugins.DoughnutLabel.Label;
+import net.comtor.chartjs.Options.Plugins.Plugin;
 import net.comtor.chartjs.Options.Title;
 import net.comtor.chartjs.Options.scales.Cartesian.LinearScale;
 import net.comtor.chartjs.Options.scales.Scale;
@@ -85,11 +88,27 @@ public class ChartJsBuilder {
         options.setTitle(titleOptions);
         return this;
     }
-    
-    public ChartJsBuilder addCenterText(String text) {        
+    public ChartJsBuilder addCenterText(String text) {
         options.setCentertext(text);
         return this;
     }
+
+    public ChartJsBuilder addTextLabelDoughnut(String... labels) {
+        if (chart.getType().equals(ChartJs.TYPE_DOUGHNUT)) {
+            ArrayList<String>labelStringArray = new ArrayList(Arrays.asList(labels));
+            ArrayList<Label> labelArray=new ArrayList<>();
+            for (String label : labelStringArray) {
+                labelArray.add(new Label(label));
+            }
+            
+            options.setPlugins(new Plugin(new DoughnutLabel(labelArray)));
+        } else {
+            throw new IllegalArgumentException("The type of chart should be doughnut");
+        }
+
+        return this;
+    }
+    
     
     public ChartJsBuilder showLegend(boolean legend) {
         Legend legendOptions = new Legend(legend);
