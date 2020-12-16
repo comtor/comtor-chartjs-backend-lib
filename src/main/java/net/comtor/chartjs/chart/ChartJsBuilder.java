@@ -108,6 +108,16 @@ public class ChartJsBuilder {
 
         return this;
     }
+    public ChartJsBuilder addLabelsDoughnut(ArrayList<Label> label) {
+        if (chart.getType().equals(ChartJs.TYPE_DOUGHNUT)) {            
+            
+            options.setPlugins(new Plugin(new DoughnutLabel(label)));
+        } else {
+            throw new IllegalArgumentException("The type of chart should be doughnut");
+        }
+
+        return this;
+    }
     
     
     public ChartJsBuilder showLegend(boolean legend) {

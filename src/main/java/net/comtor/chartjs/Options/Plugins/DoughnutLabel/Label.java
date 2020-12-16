@@ -26,6 +26,12 @@ public class Label implements Serializable {
         this.font = font;
     }
 
+    public Label(String text, Font font, String color) {
+        this.text = text;
+        this.font = font;
+        this.color = color;
+    }
+
     public String getText() {
         return text;
     }
@@ -40,6 +46,14 @@ public class Label implements Serializable {
 
     public void setFont(Font font) {
         this.font = font;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
 }
