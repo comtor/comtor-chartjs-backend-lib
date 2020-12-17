@@ -20,6 +20,14 @@ public class Font implements Serializable {
         this.size = size;
     }
 
+    public Font(String family) {
+        this.family = family;
+    }
+    public Font(String family, double size) {
+        this.size=size;
+        this.family = family;
+    }
+
     public double getSize() {
         return size;
     }

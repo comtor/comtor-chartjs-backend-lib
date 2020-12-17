@@ -26,6 +26,11 @@ public class Label implements Serializable {
         this.font = font;
     }
 
+    public Label(String text, String color) {
+        this.text = text;
+        this.color = color;
+    }
+
     public Label(String text, Font font, String color) {
         this.text = text;
         this.font = font;
