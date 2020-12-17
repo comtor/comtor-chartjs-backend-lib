@@ -108,6 +108,12 @@ public class ChartJsBuilder {
 
         return this;
     }
+    
+    public ChartJsBuilder addLabelsDoughnut(Label... labels){
+        ArrayList<Label> labelsArray = new ArrayList(Arrays.asList(labels));
+        return addLabelsDoughnut(labelsArray);
+    }
+    
     public ChartJsBuilder addLabelsDoughnut(ArrayList<Label> label) {
         if (chart.getType().equals(ChartJs.TYPE_DOUGHNUT)) {            
             
