@@ -123,7 +123,7 @@ public class ChartJsBuilder {
                     + "                });\n"
                     + "                var currentValue = dataset.data[tooltipItem.index];\n"
                     + "                var percentage = Math.floor(((currentValue/total) * 100)+0.5);         \n"
-                    + "                return percentage + \"%\";");
+                    + "                return percentage + \"%\";}");
             tooltip.setCallbacks(tooltipCallback);
             this.options.setTooltips(tooltip);
         } else {
