@@ -11,6 +11,8 @@ import net.comtor.chartjs.Options.Plugins.DoughnutLabel.DoughnutLabel;
 import net.comtor.chartjs.Options.Plugins.DoughnutLabel.Label;
 import net.comtor.chartjs.Options.Plugins.Plugin;
 import net.comtor.chartjs.Options.Title;
+import net.comtor.chartjs.Options.Tooltip.Tooltip;
+import net.comtor.chartjs.Options.Tooltip.TooltipCallback;
 import net.comtor.chartjs.Options.scales.Cartesian.LinearScale;
 import net.comtor.chartjs.Options.scales.Scale;
 import net.comtor.chartjs.Options.scales.ScaleBuilder;
@@ -36,22 +38,22 @@ import net.comtor.chartjs.chart.ScatterChart.ScatterChartDataset;
  * @author vihlai
  */
 public class ChartJsBuilder {
-    
+
     private ChartJs chart;
     private Options options;
     private Data data;
-    private ArrayList datasets;    
-    
+    private ArrayList datasets;
+
     public ChartJsBuilder() {
     }
-    
+
     public ChartJsBuilder(String type) {
         options = new Options();
         data = new Data();
         datasets = new ArrayList();
         switch (type) {
             case ChartJs.TYPE_BAR:
-                chart = new BarChart();                
+                chart = new BarChart();
                 break;
             case ChartJs.TYPE_BUBBLE:
                 chart = new BubbleChart();
@@ -76,18 +78,19 @@ public class ChartJsBuilder {
                 break;
         }
     }
-    
+
     //Options
     public ChartJsBuilder addOptions(Options options) {
         chart.setOptions(options);
         return this;
     }
-    
+
     public ChartJsBuilder addTitle(String title) {
         Title titleOptions = new Title(title);
         options.setTitle(titleOptions);
         return this;
     }
+
     public ChartJsBuilder addCenterText(String text) {
         options.setCentertext(text);
         return this;
@@ -95,12 +98,12 @@ public class ChartJsBuilder {
 
     public ChartJsBuilder addTextLabelDoughnut(String... labels) {
         if (chart.getType().equals(ChartJs.TYPE_DOUGHNUT)) {
-            ArrayList<String>labelStringArray = new ArrayList(Arrays.asList(labels));
-            ArrayList<Label> labelArray=new ArrayList<>();
+            ArrayList<String> labelStringArray = new ArrayList(Arrays.asList(labels));
+            ArrayList<Label> labelArray = new ArrayList<>();
             for (String label : labelStringArray) {
                 labelArray.add(new Label(label));
             }
-            
+
             options.setPlugins(new Plugin(new DoughnutLabel(labelArray)));
         } else {
             throw new IllegalArgumentException("The type of chart should be doughnut");
@@ -108,15 +111,36 @@ public class ChartJsBuilder {
 
         return this;
     }
-    
-    public ChartJsBuilder addLabelsDoughnut(Label... labels){
+
+    public ChartJsBuilder tooltipPercentageDoughnut() {
+        if (chart.getType().equals(ChartJs.TYPE_DOUGHNUT)) {
+            Tooltip tooltip = new Tooltip();
+            TooltipCallback tooltipCallback = new TooltipCallback();
+            tooltipCallback.setLabel("function(tooltipItem, data) {\n"
+                    + "                  var dataset = data.datasets[tooltipItem.datasetIndex];\n"
+                    + "                var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {\n"
+                    + "                  return previousValue + currentValue;\n"
+                    + "                });\n"
+                    + "                var currentValue = dataset.data[tooltipItem.index];\n"
+                    + "                var percentage = Math.floor(((currentValue/total) * 100)+0.5);         \n"
+                    + "                return percentage + \"%\";");
+            tooltip.setCallbacks(tooltipCallback);
+            this.options.setTooltips(tooltip);
+        } else {
+            throw new IllegalArgumentException("The type of chart should be doughnut");
+        }
+
+        return this;
+    }
+
+    public ChartJsBuilder addLabelsDoughnut(Label... labels) {
         ArrayList<Label> labelsArray = new ArrayList(Arrays.asList(labels));
         return addLabelsDoughnut(labelsArray);
     }
-    
+
     public ChartJsBuilder addLabelsDoughnut(ArrayList<Label> label) {
-        if (chart.getType().equals(ChartJs.TYPE_DOUGHNUT)) {            
-            
+        if (chart.getType().equals(ChartJs.TYPE_DOUGHNUT)) {
+
             options.setPlugins(new Plugin(new DoughnutLabel(label)));
         } else {
             throw new IllegalArgumentException("The type of chart should be doughnut");
@@ -124,36 +148,35 @@ public class ChartJsBuilder {
 
         return this;
     }
-    
-    
+
     public ChartJsBuilder showLegend(boolean legend) {
         Legend legendOptions = new Legend(legend);
         options.setLegend(legendOptions);
         return this;
     }
-    
+
     public ChartJsBuilder setResponsive(boolean responsive) {
         options.setResponsive(responsive);
         return this;
     }
-    
+
     public ChartJsBuilder setLabels(ArrayList<String> labels) {
         data.setLabels(labels);
         return this;
     }
-    
+
     public ChartJsBuilder setLabels(String... labels) {
         ArrayList<String> label = new ArrayList(Arrays.asList(labels));
         setLabels(label);
         return this;
     }
-    
+
     public ChartJsBuilder setData(ArrayList data) {
         isValidData(data);
         setDataToChart(data);
         return this;
     }
-    
+
     public ChartJsBuilder setData(Number... data) {
         ArrayList<Double> dataArray = new ArrayList<>();
         for (Number number : data) {
@@ -162,7 +185,7 @@ public class ChartJsBuilder {
         setData(dataArray);
         return this;
     }
-    
+
     public ChartJsBuilder setBackgroundColor(ArrayList<String> color) {
         for (int i = 0; i < datasets.size(); i++) {
             AbstractDataset dataset = (AbstractDataset) datasets.get(i);
@@ -172,13 +195,13 @@ public class ChartJsBuilder {
         }
         return this;
     }
-    
+
     public ChartJsBuilder setBackgroundColor(String... color) {
         ArrayList<String> colorDataset = new ArrayList(Arrays.asList(color));
         setBackgroundColor(colorDataset);
         return this;
     }
-    
+
     public ChartJsBuilder setBorderColor(ArrayList<String> color) {
         for (int i = 0; i < datasets.size(); i++) {
             AbstractDataset dataset = (AbstractDataset) datasets.get(i);
@@ -188,13 +211,13 @@ public class ChartJsBuilder {
         }
         return this;
     }
-    
+
     public ChartJsBuilder setBorderColor(String... color) {
         ArrayList<String> bordercolorDataset = new ArrayList(Arrays.asList(color));
         setBorderColor(bordercolorDataset);
         return this;
     }
-    
+
     public ChartJsBuilder setBorderWidth(Integer border) {
         for (int i = 0; i < datasets.size(); i++) {
             AbstractDataset dataset = (AbstractDataset) datasets.get(i);
@@ -214,26 +237,26 @@ public class ChartJsBuilder {
         }
         return this;
     }
-    
+
     //Scales
     public ChartJsBuilder areCategoryScale() {
         areCartesianAxes();
         options.setScales(new ScaleBuilder(Scale.CATEGORY_SCALE).build());
         return this;
     }
-    
-public ChartJsBuilder areLinearScale(String xLabel, String yLabel) {
+
+    public ChartJsBuilder areLinearScale(String xLabel, String yLabel) {
         areCartesianAxes();
-        options.setScales(new ScaleBuilder(Scale.LINEAR_SCALE).setLabelString(xLabel,yLabel).build());
+        options.setScales(new ScaleBuilder(Scale.LINEAR_SCALE).setLabelString(xLabel, yLabel).build());
         return this;
     }
-    
+
     public ChartJsBuilder areLogarithmicScale() {
         areCartesianAxes();
         options.setScales(new ScaleBuilder(Scale.LOGARITHMIC_SCALE).build());
         return this;
     }
-    
+
     public ChartJsBuilder areTimeScale() {
         areCartesianAxes();
         options.setScales(new ScaleBuilder(Scale.TIME_SCALE).build());
@@ -249,13 +272,12 @@ public ChartJsBuilder areLinearScale(String xLabel, String yLabel) {
         }
         return this;
     }
-    
+
     private void areCartesianAxes() {
         if ((chart.getType().equals(ChartJs.TYPE_RADAR) || chart.getType().equals(ChartJs.TYPE_POLAR_AREA))) {
             throw new IllegalArgumentException("The type of chart should be polar area or radar");
         }
     }
-
 
     public ChartJsBuilder setStackedBarXAxe() {
         if (chart.getType().equals(ChartJs.TYPE_BAR) || chart.getType().equals(ChartJs.TYPE_LINE)) {
@@ -265,7 +287,7 @@ public ChartJsBuilder areLinearScale(String xLabel, String yLabel) {
         }
         return this;
     }
-    
+
     public ChartJsBuilder setStackedBarYAxe() {
         if (chart.getType().equals(ChartJs.TYPE_BAR) || chart.getType().equals(ChartJs.TYPE_LINE)) {
             options.setScales(new ScaleBuilder(options.getScales()).isStackedBarYAxe().build());
@@ -274,75 +296,75 @@ public ChartJsBuilder areLinearScale(String xLabel, String yLabel) {
         }
         return this;
     }
-    
+
     public ChartJsBuilder setScaleMinMaxTicksxAxis(Double min, Double max) {
         hadScales(options);
         options.setScales(new ScaleBuilder(options.getScales()).setMinMaxTicksXAxis(min, max).build());
-        
+
         return this;
     }
-    
+
     public ChartJsBuilder setScaleMinMaxTicksyAxis(Double min, Double max) {
         hadScales(options);
         options.setScales(new ScaleBuilder(options.getScales()).setMinMaxTicksYAxis(min, max).build());
-        
+
         return this;
     }
-    
+
     public ChartJsBuilder isScaleBeginAtZeroxAxis(boolean bzero) {
         hadScales(options);
         options.setScales(new ScaleBuilder(options.getScales()).isBeginAtZeroXAxis(bzero).build());
-        
+
         return this;
     }
-    
+
     public ChartJsBuilder isScaleBeginAtZeroyAxis(boolean bzero) {
         hadScales(options);
         options.setScales(new ScaleBuilder(options.getScales()).isBeginAtZeroYAxis(bzero).build());
-        
+
         return this;
     }
-    
+
     public ChartJsBuilder setScaleStepSizexAxis(Double stepSize) {
         hadScales(options);
         options.setScales(new ScaleBuilder(options.getScales()).setStepSizeXAxis(stepSize).build());
-        
+
         return this;
     }
-    
+
     public ChartJsBuilder setScaleStepSizeyAxis(Double stepSize) {
         hadScales(options);
         options.setScales(new ScaleBuilder(options.getScales()).setStepSizeYAxis(stepSize).build());
-        
+
         return this;
     }
-    
+
     public ChartJsBuilder addXAxis() {
         hadScales(options);
         options.setScales(new ScaleBuilder(options.getScales()).AddXAxe().build());
-        
+
         return this;
     }
-    
+
     public ChartJsBuilder addYAxis() {
         hadScales(options);
         options.setScales(new ScaleBuilder(options.getScales()).AddYAxe().build());
-        
+
         return this;
     }
-    
+
     private void hadScales(Options options) {
         if (options.getScales() == null) {
             throw new IllegalArgumentException("This method needs a preview scale");
         }
     }
-    
+
     public ChartJsBuilder setScaleMinMaxTicksxAxis(String min, String max) {
         hadScales(options);
         options.setScales(new ScaleBuilder(options.getScales()).setMinMaxTicksXAxis(min, max).build());
         return this;
     }
-    
+
     public ChartJsBuilder setHorizontalBar() {
         if (!chart.getType().equals(ChartJs.TYPE_BAR)) {
             throw new IllegalArgumentException("The type of chart should be Bar");
@@ -351,7 +373,7 @@ public ChartJsBuilder areLinearScale(String xLabel, String yLabel) {
         }
         return this;
     }
-    
+
     private void isValidData(ArrayList data) {
         if (data.isEmpty()) {
             throw new IllegalArgumentException("data is empty");
@@ -364,35 +386,35 @@ public ChartJsBuilder areLinearScale(String xLabel, String yLabel) {
             throw new IllegalArgumentException("The type of data is incorrect, should be Double");
         }
     }
-    
+
     public Options getOptions() {
         return options;
     }
-    
+
     public void setOptions(Options options) {
         this.options = options;
     }
-    
+
     public ChartJs build() {
         chart.setOptions(options);
         setDataAndDatasetToChart();
         return this.chart;
     }
-    
+
     private void setDataAndDatasetToChart() {
         data.setDatasets(datasets);
         switch (chart.getType()) {
             case ChartJs.TYPE_BAR:
-            case BarChart.TYPE_HORIZONTAL_BAR:                
+            case BarChart.TYPE_HORIZONTAL_BAR:
                 castToBarChart().setData(data);
                 break;
-            case ChartJs.TYPE_BUBBLE:                
+            case ChartJs.TYPE_BUBBLE:
                 castToBubbleChart().setData(data);
                 break;
-            case ChartJs.TYPE_DOUGHNUT:                
+            case ChartJs.TYPE_DOUGHNUT:
                 castToDoughnutChart().setData(data);
                 break;
-            case ChartJs.TYPE_LINE:                
+            case ChartJs.TYPE_LINE:
                 castToLineChart().setData(data);
                 break;
             case ChartJs.TYPE_PIE:
@@ -401,15 +423,15 @@ public ChartJsBuilder areLinearScale(String xLabel, String yLabel) {
             case ChartJs.TYPE_POLAR_AREA:
                 castToPolarAreaChart().setData(data);
                 break;
-            case ChartJs.TYPE_RADAR:                
+            case ChartJs.TYPE_RADAR:
                 castToRadarChart().setData(data);
                 break;
-            case ChartJs.TYPE_SCATTER:                
+            case ChartJs.TYPE_SCATTER:
                 castToScatterChart().setData(data);
                 break;
         }
     }
-    
+
     private void setDataToChart(ArrayList data) {
         switch (chart.getType()) {
             case ChartJs.TYPE_BAR:
@@ -439,29 +461,36 @@ public ChartJsBuilder areLinearScale(String xLabel, String yLabel) {
                 break;
         }
     }
-    
-    private BarChart castToBarChart(){
+
+    private BarChart castToBarChart() {
         return BarChart.class.cast(chart);
     }
-    private BubbleChart castToBubbleChart(){
+
+    private BubbleChart castToBubbleChart() {
         return BubbleChart.class.cast(chart);
     }
-    private DoughnutChart castToDoughnutChart(){
+
+    private DoughnutChart castToDoughnutChart() {
         return DoughnutChart.class.cast(chart);
     }
-    private LineChart castToLineChart(){
+
+    private LineChart castToLineChart() {
         return LineChart.class.cast(chart);
     }
-    private PieChart castToPieChart(){
+
+    private PieChart castToPieChart() {
         return PieChart.class.cast(chart);
     }
-    private PolarAreaChart castToPolarAreaChart(){
+
+    private PolarAreaChart castToPolarAreaChart() {
         return PolarAreaChart.class.cast(chart);
     }
-    private RadarChart castToRadarChart(){
+
+    private RadarChart castToRadarChart() {
         return RadarChart.class.cast(chart);
     }
-    private ScatterChart castToScatterChart(){
+
+    private ScatterChart castToScatterChart() {
         return ScatterChart.class.cast(chart);
     }
 }
