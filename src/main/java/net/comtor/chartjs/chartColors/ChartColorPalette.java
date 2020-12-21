@@ -1,6 +1,7 @@
 package net.comtor.chartjs.chartColors;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 /**
  *
@@ -16,7 +17,7 @@ public class ChartColorPalette {
 
     public ChartColor getColor(int index) {
         index = index % palette.size();
-        
+
         return palette.get(index);
     }
 
@@ -36,4 +37,7 @@ public class ChartColorPalette {
         this.palette.add(color);
     }
 
+    public ChartColor getRandomColor() {
+        return getColor(new Random().nextInt(getPalette().size()));
+    }
 }

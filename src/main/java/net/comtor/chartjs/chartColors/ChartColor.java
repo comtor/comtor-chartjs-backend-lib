@@ -9,7 +9,6 @@ public class ChartColor {
     private double r;
     private double g;
     private double b;
-
     private double a;
 
     public ChartColor(double r, double g, double b, double a) {
@@ -19,34 +18,28 @@ public class ChartColor {
         this.a = a;
     }
 
-    public ChartColor(ChartColor color) {
-        this((double) color.getRed() / 255,
-                (double) color.getGreen() / 225,
-                (double) color.getBlue() / 255,
-                color.getAlpha());
-    }
-
     public ChartColor(double r, double g, double b) {
-        this(r, g, b, 1.0f);
+        this(r, g, b, 1);
     }
 
-    public ChartColor(String colorStrHex) {
-        this(
-                Integer.valueOf(colorStrHex.substring(0, 2), 16) / 255.0,
-                Integer.valueOf(colorStrHex.substring(2, 4), 16) / 255.0,
-                Integer.valueOf(colorStrHex.substring(4, 6), 16) / 255.0);
+    public ChartColor(String hexColor) {
+        hexColor = hexColor.replace("#", "");
+        r = Integer.valueOf(hexColor.substring(0, 2), 16);
+        g = Integer.valueOf(hexColor.substring(2, 4), 16);
+        b = Integer.valueOf(hexColor.substring(4, 6), 16);
+        a = 1;
     }
 
     public int getRed() {
-        return (int) (r * 255);
+        return (int) r;
     }
 
     public int getGreen() {
-        return (int) (g * 255);
+        return (int) g;
     }
 
     public int getBlue() {
-        return (int) (b * 255);
+        return (int) b;
     }
 
     public void setAlpha(double a) {
@@ -58,11 +51,7 @@ public class ChartColor {
     }
 
     public String getRBGA() {
-        return "rgba("
-                + getRed() + ", "
-                + getGreen() + ", "
-                + getBlue() + ", "
-                + getAlpha()
-                + ")";
+        return "rgba(" + getRed() + ", " + getGreen() + ", " + getBlue() + ", " + getAlpha() + ")";
     }
+
 }
