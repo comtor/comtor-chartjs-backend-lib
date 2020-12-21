@@ -5,7 +5,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- *
+ *Plugin used: https://github.com/ciprianciurea/chartjs-plugin-doughnutlabel
+ * 
  * @author vihlai
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
