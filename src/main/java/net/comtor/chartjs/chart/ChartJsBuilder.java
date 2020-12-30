@@ -116,14 +116,14 @@ public class ChartJsBuilder {
         if (chart.getType().equals(ChartJs.TYPE_DOUGHNUT)) {
             Tooltip tooltip = new Tooltip();
             TooltipCallback tooltipCallback = new TooltipCallback();
-            tooltipCallback.setLabel("function(tooltipItem, data) {\n"
-                    + "                  var dataset = data.datasets[tooltipItem.datasetIndex];\n"
-                    + "                var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {\n"
-                    + "                  return previousValue + currentValue;\n"
-                    + "                });\n"
-                    + "                var currentValue = dataset.data[tooltipItem.index];\n"
-                    + "                var percentage = Math.floor(((currentValue/total) * 100)+0.5);         \n"
-                    + "                return percentage + \"%\";}");
+            tooltipCallback.setLabel("function(tooltipItem, data) {"
+                    + "                  var dataset = data.datasets[tooltipItem.datasetIndex];"
+                    + "                var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {"
+                    + "                  return previousValue + currentValue;"
+                    + "                });"
+                    + "                var currentValue = dataset.data[tooltipItem.index];"
+                    + "                var percentage = Math.floor(((currentValue/total) * 100)+0.5);         "
+                    + "                return percentage;}");
             tooltip.setCallbacks(tooltipCallback);
             this.options.setTooltips(tooltip);
         } else {
