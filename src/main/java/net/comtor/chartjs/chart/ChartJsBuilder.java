@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import net.comtor.chartjs.AbstractDataset;
 import net.comtor.chartjs.ChartJs;
+import net.comtor.chartjs.ComtorOptions.ComtorOptions;
+import net.comtor.chartjs.ComtorOptions.LabelsFormat.LabelsFormat;
 import net.comtor.chartjs.DataType2;
 import net.comtor.chartjs.Options.Legend.Legend;
 import net.comtor.chartjs.Options.Options;
@@ -41,6 +43,7 @@ public class ChartJsBuilder {
 
     private ChartJs chart;
     private Options options;
+    private ComtorOptions comtorOptions;
     private Data data;
     private ArrayList datasets;
 
@@ -112,23 +115,50 @@ public class ChartJsBuilder {
         return this;
     }
 
-    public ChartJsBuilder tooltipPercentageDoughnut() {
-        if (chart.getType().equals(ChartJs.TYPE_DOUGHNUT)) {
-            Tooltip tooltip = new Tooltip();
-            TooltipCallback tooltipCallback = new TooltipCallback();
-            tooltipCallback.setLabel("function(tooltipItem, data) {"
-                    + "                  var dataset = data.datasets[tooltipItem.datasetIndex];"
-                    + "                var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {"
-                    + "                  return previousValue + currentValue;"
-                    + "                });"
-                    + "                var currentValue = dataset.data[tooltipItem.index];"
-                    + "                var percentage = Math.floor(((currentValue/total) * 100)+0.5);         "
-                    + "                return percentage;}");
-            tooltip.setCallbacks(tooltipCallback);
-            this.options.setTooltips(tooltip);
-        } else {
-            throw new IllegalArgumentException("The type of chart should be doughnut");
+    public ChartJsBuilder setCurrencyLabelsFormat(String currency) {
+        if (this.comtorOptions == null) {
+            this.comtorOptions = new ComtorOptions();
         }
+        LabelsFormat labelsFormat = this.comtorOptions.getLabelsFormat();
+        if (labelsFormat == null) {
+            labelsFormat = new LabelsFormat();
+        }
+
+        labelsFormat.setCurrencySymbol(currency);
+
+        this.comtorOptions.setLabelsFormat(labelsFormat);
+
+        return this;
+    }
+
+    public ChartJsBuilder setPercentageLabelsFormat() {
+        if (this.comtorOptions == null) {
+            this.comtorOptions = new ComtorOptions();
+        }
+        LabelsFormat labelsFormat = this.comtorOptions.getLabelsFormat();
+        if (labelsFormat == null) {
+            labelsFormat = new LabelsFormat();
+        }
+
+        labelsFormat.setAsPercentageFormat();
+
+        this.comtorOptions.setLabelsFormat(labelsFormat);
+
+        return this;
+    }
+
+    public ChartJsBuilder setNumberLabelsFormat() {
+        if (this.comtorOptions == null) {
+            this.comtorOptions = new ComtorOptions();
+        }
+        LabelsFormat labelsFormat = this.comtorOptions.getLabelsFormat();
+        if (labelsFormat == null) {
+            labelsFormat = new LabelsFormat();
+        }
+
+        labelsFormat.setAsNumberFormat();
+
+        this.comtorOptions.setLabelsFormat(labelsFormat);
 
         return this;
     }
@@ -395,8 +425,17 @@ public class ChartJsBuilder {
         this.options = options;
     }
 
+    public ComtorOptions getComtorOptions() {
+        return comtorOptions;
+    }
+
+    public void setComtorOptions(ComtorOptions comtorOptions) {
+        this.comtorOptions = comtorOptions;
+    }
+
     public ChartJs build() {
         chart.setOptions(options);
+        chart.setComtorOptions(comtorOptions);
         setDataAndDatasetToChart();
         return this.chart;
     }

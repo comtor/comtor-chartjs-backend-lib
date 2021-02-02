@@ -5,6 +5,7 @@ import java.io.Serializable;
 import net.comtor.chartjs.AbstractChartJs;
 import net.comtor.chartjs.Options.Options;
 import net.comtor.chartjs.ChartJs;
+import net.comtor.chartjs.ComtorOptions.ComtorOptions;
 import net.comtor.chartjs.chart.Data;
 
 /**

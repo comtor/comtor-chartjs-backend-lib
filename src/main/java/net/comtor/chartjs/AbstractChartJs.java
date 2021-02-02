@@ -1,6 +1,7 @@
 package net.comtor.chartjs;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import net.comtor.chartjs.ComtorOptions.ComtorOptions;
 import net.comtor.chartjs.Options.Options;
 
 /**
@@ -10,6 +11,7 @@ import net.comtor.chartjs.Options.Options;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public abstract class AbstractChartJs implements ChartJs {
 
+    private ComtorOptions comtorOptions;
     private Options options;
     public String type;
 
@@ -31,4 +33,12 @@ public abstract class AbstractChartJs implements ChartJs {
         this.options = options;
     }
 
+    @Override
+    public ComtorOptions getComtorOptions() {
+        return comtorOptions;
+    }
+
+    public void setComtorOptions(ComtorOptions comtorOptions) {
+        this.comtorOptions = comtorOptions;
+    }
 }
