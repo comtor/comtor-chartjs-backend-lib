@@ -43,12 +43,8 @@ public class BarChart extends AbstractChartJs implements Serializable{
     }
     
     public void isHorizontalChart() {
-        this.type=TYPE_HORIZONTAL_BAR;
+        setType(TYPE_HORIZONTAL_BAR);
     }
 
 
-    @Override
-    public String getType() {
-        return this.type;
-    }
 }
