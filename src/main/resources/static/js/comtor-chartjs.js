@@ -5,7 +5,6 @@ function drawChartJs(canvasId, containerId, endpoint) {
             container.innerHTML = "<div class='comtor-alert-info'>No se encontraron datos para mostrar.</div>";
         } else {
             var ctx = document.getElementById(canvasId);
-            console.log(data);
             data = prepareComtorPlugins(data);
             console.log(data);
             var myChart = new Chart(ctx, data);
