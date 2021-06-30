@@ -47,11 +47,16 @@ function prepareNumberFormat(data) {
     } else if (data.type == "bar") {
         dataAxis = "y";
     }
+    var needLegend = data.type == "doughnut";
 
 
     data = createPropertiesTooltip(data);
     data.options.tooltips.callbacks.label = function (tooltipItem, chartData) {
-        return new Intl.NumberFormat().format(chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
+        var legend = '';
+        if(needLegend){
+            legend = chartData.labels[tooltipItem.index] + ": ";
+        }
+        return legend + new Intl.NumberFormat().format(chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
     };
 
 
@@ -77,6 +82,7 @@ function prepareNumberFormat(data) {
 
 function preparePercentageFormat(data) {
     var dataAxis = "";
+    var needLegend = data.type == "doughnut";
     if (data.type == "horizontalBar") {
         dataAxis = "x";
     } else if (data.type == "bar") {
@@ -85,7 +91,11 @@ function preparePercentageFormat(data) {
 
     data = createPropertiesTooltip(data);
     data.options.tooltips.callbacks.label = function (tooltipItem, chartData) {
-        return new Intl.NumberFormat().format(chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]) + '%';
+        var legend = '';
+        if(needLegend){
+            legend = chartData.labels[tooltipItem.index] + ": ";
+        }
+        return legend + new Intl.NumberFormat().format(chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]) + '%';
     };
 
 
@@ -111,16 +121,21 @@ function preparePercentageFormat(data) {
 function prepareCurrencyFormat(data) {
     var currency = data.comtorOptions.labelsFormat.currencySymbol;
     var dataAxis = "";
+    var needLegend = data.type == "doughnut";
     if (data.type == "horizontalBar") {
         dataAxis = "x";
     } else if (data.type == "bar") {
         dataAxis = "y";
-    }
+    } 
 
 
     data = createPropertiesTooltip(data);
     data.options.tooltips.callbacks.label = function (tooltipItem, chartData) {
-        return currency + new Intl.NumberFormat().format(chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
+        var legend = '';
+        if(needLegend){
+            legend = chartData.labels[tooltipItem.index] + ": ";
+        }
+        return legend + currency + new Intl.NumberFormat().format(chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
     };
 
 
