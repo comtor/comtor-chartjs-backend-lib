@@ -23,6 +23,8 @@ function prepareComtorPlugins(data) {
     }
     var labelFormat = data.comtorOptions.labelsFormat.format;
 
+    data = getStructuredData(data);
+
     switch (labelFormat) {
         case "percentage":
             return preparePercentageFormat(data);
@@ -50,10 +52,9 @@ function prepareNumberFormat(data) {
     var needLegend = data.type == "doughnut";
 
 
-    data = createPropertiesTooltip(data);
     data.options.tooltips.callbacks.label = function (tooltipItem, chartData) {
         var legend = '';
-        if(needLegend){
+        if (needLegend) {
             legend = chartData.labels[tooltipItem.index] + ": ";
         }
         return legend + new Intl.NumberFormat().format(chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
@@ -61,14 +62,12 @@ function prepareNumberFormat(data) {
 
 
     if (dataAxis == "x") {
-        data = createPropertiesForAxisTicks("x", data);
         data.options.scales.xAxes[0].ticks.callback = function (value, index, values) {
             return  new Intl.NumberFormat().format(value);
         };
 
 
     } else if (dataAxis == "y") {
-        data = createPropertiesForAxisTicks("y", data);
         data.options.scales.yAxes[0].ticks.callback = function (value, index, values) {
             return new Intl.NumberFormat().format(value);
         };
@@ -89,10 +88,9 @@ function preparePercentageFormat(data) {
         dataAxis = "y";
     }
 
-    data = createPropertiesTooltip(data);
     data.options.tooltips.callbacks.label = function (tooltipItem, chartData) {
         var legend = '';
-        if(needLegend){
+        if (needLegend) {
             legend = chartData.labels[tooltipItem.index] + ": ";
         }
         return legend + new Intl.NumberFormat().format(chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]) + '%';
@@ -105,6 +103,7 @@ function preparePercentageFormat(data) {
         data.options.scales.xAxes[0].ticks.callback = function (value, index, values) {
             return  new Intl.NumberFormat().format(value) + '%';
         };
+
 
 
     } else if (dataAxis == "y") {
@@ -126,18 +125,16 @@ function prepareCurrencyFormat(data) {
         dataAxis = "x";
     } else if (data.type == "bar") {
         dataAxis = "y";
-    } 
+    }
 
 
-    data = createPropertiesTooltip(data);
     data.options.tooltips.callbacks.label = function (tooltipItem, chartData) {
         var legend = '';
-        if(needLegend){
+        if (needLegend) {
             legend = chartData.labels[tooltipItem.index] + ": ";
         }
         return legend + currency + new Intl.NumberFormat().format(chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
     };
-
 
 
     if (dataAxis == "x") {
@@ -156,6 +153,52 @@ function prepareCurrencyFormat(data) {
     return data;
 
 }
+
+function getStructuredData(data) {
+    var caracteres = 10;
+
+    var dataAxis = "";
+    if (data.type == "horizontalBar") {
+        dataAxis = "x";
+    } else if (data.type == "bar") {
+        dataAxis = "y";
+    }
+    var needLegend = data.type == "doughnut";
+
+    data = createPropertiesTooltip(data);
+
+    if (dataAxis != "") {
+        data = createPropertiesForAxisTicks("x", data);
+        data = createPropertiesForAxisTicks("y", data);
+    }
+    data.options.tooltips.callbacks.title = function (tooltipItem, chartData) {
+        return chartData.labels[tooltipItem[0].index];
+    }
+
+    if (dataAxis == "x") {
+        data.options.scales.yAxes[0].ticks.callback = function (value, index, values) {
+            var dots = "";
+            if (value.length > caracteres) {
+                dots = "...";
+            }
+            return value.substring(0, caracteres + ((10 - values.length))) + dots;
+        };
+
+    } else if (dataAxis == "y") {
+        data.options.scales.xAxes[0].ticks.callback = function (value, index, values) {
+            var dots = "";
+            if (value.length > caracteres) {
+                dots = "...";
+            }
+            return value.substring(0, caracteres + ((10 - values.length))) + dots;
+        };
+    }
+    return data;
+
+
+}
+
+
 
 function createPropertiesTooltip(data) {
     //Se definen el callback del tooltip
